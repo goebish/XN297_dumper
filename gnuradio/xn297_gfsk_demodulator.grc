@@ -6,7 +6,7 @@
     <key>options</key>
     <param>
       <key>author</key>
-      <value></value>
+      <value>goebish</value>
     </param>
     <param>
       <key>window_size</key>
@@ -22,7 +22,7 @@
     </param>
     <param>
       <key>description</key>
-      <value></value>
+      <value>gnuradio flow graph for xn297decoder</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -38,7 +38,7 @@
     </param>
     <param>
       <key>generate_options</key>
-      <value>wx_gui</value>
+      <value>no_gui</value>
     </param>
     <param>
       <key>hier_block_src_path</key>
@@ -82,7 +82,7 @@
     </param>
     <param>
       <key>title</key>
-      <value></value>
+      <value>XN297 Demodulator</value>
     </param>
     <param>
       <key>placement</key>
@@ -101,7 +101,61 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(256, 12)</value>
+      <value>(168, 404)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>bitrate</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(8, 404)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>channel</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>18</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(640, 12)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -128,7 +182,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(464, 12)</value>
+      <value>(256, 12)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -151,38 +205,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(568, 12)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>data_rate</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>1e6</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
       <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(168, 12)</value>
+      <value>(360, 12)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -194,66 +221,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>2.4e9 + (freq_slider*1e6)</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_slider</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>converver</key>
-      <value>int_converter</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>150e3</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(120, 342)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value></value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>freq_fine_slider</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Freq fine</value>
-    </param>
-    <param>
-      <key>max</key>
-      <value>1000000</value>
-    </param>
-    <param>
-      <key>min</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>notebook</key>
-      <value></value>
-    </param>
-    <param>
-      <key>num_steps</key>
-      <value>100</value>
-    </param>
-    <param>
-      <key>style</key>
-      <value>wx.SL_HORIZONTAL</value>
+      <value>2.4e9 + (channel*1e6)</value>
     </param>
   </block>
   <block>
@@ -268,7 +236,34 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(376, 12)</value>
+      <value>(88, 404)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>freq_fine</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>100e3</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(752, 12)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -284,18 +279,10 @@
     </param>
   </block>
   <block>
-    <key>variable_slider</key>
+    <key>variable</key>
     <param>
       <key>comment</key>
       <value></value>
-    </param>
-    <param>
-      <key>converver</key>
-      <value>int_converter</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>18</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -303,90 +290,19 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(8, 342)</value>
+      <value>(240, 404)</value>
     </param>
     <param>
       <key>_rotation</key>
       <value>0</value>
     </param>
     <param>
-      <key>grid_pos</key>
-      <value></value>
-    </param>
-    <param>
       <key>id</key>
-      <value>freq_slider</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Freq coarse</value>
-    </param>
-    <param>
-      <key>max</key>
-      <value>127</value>
-    </param>
-    <param>
-      <key>min</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>notebook</key>
-      <value></value>
-    </param>
-    <param>
-      <key>num_steps</key>
-      <value>127</value>
-    </param>
-    <param>
-      <key>style</key>
-      <value>wx.SL_HORIZONTAL</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_static_text</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>converver</key>
-      <value>int_converter</value>
+      <value>hearthbeat</value>
     </param>
     <param>
       <key>value</key>
       <value>0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>formatter</key>
-      <value>None</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(320, 444)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value></value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>rpc_var</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value></value>
-    </param>
-    <param>
-      <key>notebook</key>
-      <value></value>
     </param>
   </block>
   <block>
@@ -401,34 +317,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(648, 12)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>samp_per_sym</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>int(samp_rate / data_rate)</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(8, 76)</value>
+      <value>(168, 12)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -440,7 +329,133 @@
     </param>
     <param>
       <key>value</key>
-      <value>4e6</value>
+      <value>2e6</value>
+    </param>
+  </block>
+  <block>
+    <key>blks2_selector</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(464, 200)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>bitrate_selector</value>
+    </param>
+    <param>
+      <key>input_index</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>num_outputs</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>output_index</key>
+      <value>bitrate</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
+    <key>blks2_selector</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(648, 200)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>bitrate_selector_0</value>
+    </param>
+    <param>
+      <key>input_index</key>
+      <value>bitrate</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>num_outputs</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>output_index</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
     </param>
   </block>
   <block>
@@ -463,15 +478,15 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(688, 252)</value>
+      <value>(704, 300)</value>
     </param>
     <param>
       <key>_rotation</key>
-      <value>0</value>
+      <value>180</value>
     </param>
     <param>
       <key>id</key>
@@ -510,15 +525,15 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(688, 200)</value>
+      <value>(832, 304)</value>
     </param>
     <param>
       <key>_rotation</key>
-      <value>0</value>
+      <value>180</value>
     </param>
     <param>
       <key>id</key>
@@ -561,11 +576,11 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(688, 84)</value>
+      <value>(736, 84)</value>
     </param>
     <param>
       <key>_rotation</key>
-      <value>0</value>
+      <value>180</value>
     </param>
     <param>
       <key>id</key>
@@ -612,7 +627,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(464, 100)</value>
+      <value>(784, 204)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -643,7 +658,7 @@
     </param>
     <param>
       <key>comment</key>
-      <value></value>
+      <value>1Mbps demodulator</value>
     </param>
     <param>
       <key>affinity</key>
@@ -659,7 +674,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(256, 78)</value>
+      <value>(480, 20)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -695,7 +710,78 @@
     </param>
     <param>
       <key>samples_per_symbol</key>
-      <value>samp_per_sym</value>
+      <value>int(samp_rate / 1e6)</value>
+    </param>
+    <param>
+      <key>sensitivity</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>verbose</key>
+      <value>False</value>
+    </param>
+  </block>
+  <block>
+    <key>digital_gfsk_demod</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value>250kbps demodulator</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>freq_error</key>
+      <value>0.0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(480, 340)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>gain_mu</key>
+      <value>0.175</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>digital_gfsk_demod_0_0</value>
+    </param>
+    <param>
+      <key>log</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>mu</key>
+      <value>0.05</value>
+    </param>
+    <param>
+      <key>omega_relative_limit</key>
+      <value>0.01</value>
+    </param>
+    <param>
+      <key>samples_per_symbol</key>
+      <value>int(samp_rate / 250e3)</value>
     </param>
     <param>
       <key>sensitivity</key>
@@ -734,7 +820,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(232, 236)</value>
+      <value>(232, 284)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -793,7 +879,7 @@
     </param>
     <param>
       <key>freq0</key>
-      <value>freq+freq_offset+freq_fine_slider</value>
+      <value>freq+freq_offset+freq_fine</value>
     </param>
     <param>
       <key>gain_mode0</key>
@@ -2184,7 +2270,7 @@
     </param>
     <param>
       <key>baseband_freq</key>
-      <value>freq+freq_fine_slider</value>
+      <value>freq+freq_fine</value>
     </param>
     <param>
       <key>alias</key>
@@ -2200,7 +2286,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>fft_size</key>
@@ -2212,11 +2298,11 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(464, 200)</value>
+      <value>(248, 80)</value>
     </param>
     <param>
       <key>_rotation</key>
-      <value>0</value>
+      <value>180</value>
     </param>
     <param>
       <key>grid_pos</key>
@@ -2295,11 +2381,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(688, 308)</value>
+      <value>(760, 348)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2323,7 +2409,7 @@
     </param>
     <param>
       <key>samp_rate</key>
-      <value>data_rate</value>
+      <value>1</value>
     </param>
     <param>
       <key>t_scale</key>
@@ -2331,7 +2417,7 @@
     </param>
     <param>
       <key>title</key>
-      <value>Data</value>
+      <value>Demodulated data</value>
     </param>
     <param>
       <key>trig_mode</key>
@@ -2382,7 +2468,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(320, 380)</value>
+      <value>(8, 340)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2397,6 +2483,24 @@
       <value>1235</value>
     </param>
   </block>
+  <connection>
+    <source_block_id>bitrate_selector</source_block_id>
+    <sink_block_id>digital_gfsk_demod_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>bitrate_selector</source_block_id>
+    <sink_block_id>digital_gfsk_demod_0_0</sink_block_id>
+    <source_key>1</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>bitrate_selector_0</source_block_id>
+    <sink_block_id>digital_correlate_access_code_bb_0_0_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
   <connection>
     <source_block_id>blocks_add_const_vxx_0</source_block_id>
     <sink_block_id>wxgui_scopesink2_0</sink_block_id>
@@ -2423,13 +2527,19 @@
   </connection>
   <connection>
     <source_block_id>digital_gfsk_demod_0</source_block_id>
-    <sink_block_id>digital_correlate_access_code_bb_0_0_0</sink_block_id>
+    <sink_block_id>bitrate_selector_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
+    <source_block_id>digital_gfsk_demod_0_0</source_block_id>
+    <sink_block_id>bitrate_selector_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>1</sink_key>
+  </connection>
+  <connection>
     <source_block_id>freq_xlating_fir_filter_xxx_0</source_block_id>
-    <sink_block_id>digital_gfsk_demod_0</sink_block_id>
+    <sink_block_id>bitrate_selector</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

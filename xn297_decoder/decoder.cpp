@@ -7,12 +7,9 @@ decoder::decoder(QObject *parent)
     printf("listening\n");
 
     rpc = new MaiaXmlRpcClient(QUrl("http://localhost:1235"), this);
-    QVariantList args;
-    args << 12345;
-    rpc->call("set_rpc_var", args, 
-                this, SLOT(rpc_response(QVariant &)),
-                this, SLOT(rpc_fault(int, const QString &)));
 
+    //xml rpc test
+    rpc_set("rpc_var", 1337);
 
     socket = new QUdpSocket(this);
     socket->bind(QHostAddress::LocalHost, 1234);
@@ -23,7 +20,7 @@ decoder::decoder(QObject *parent)
 
 decoder::~decoder()
 {
-    delete rpc;
+    //delete rpc;
     delete socket;
 }
 
@@ -125,6 +122,15 @@ void decoder::readPendingDatagrams()
             }
 		}
     }
+}
+
+void decoder::rpc_set(const QString & key, int value)
+{
+    QVariantList args;
+    args << value;
+    rpc->call("set_" + key, args, 
+              this, SLOT(rpc_response(QVariant &)),
+              this, SLOT(rpc_fault(int, const QString &)));
 }
 
 void decoder::rpc_response(QVariant &response)

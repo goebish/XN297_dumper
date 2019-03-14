@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xn297_decoder", "xn297_deco
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "maia", "..\libmaia\maia.vcxproj", "{E8801B08-20C1-3AA4-9E68-E31CB8064C3C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xn297 decoder", "..\xn297 decoder\xn297 decoder.vcxproj", "{AF0B96B6-53F4-4722-9CD4-C7D79384A0A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -27,6 +29,12 @@ Global
 		{E8801B08-20C1-3AA4-9E68-E31CB8064C3C}.Release|x64.ActiveCfg = Release|x64
 		{E8801B08-20C1-3AA4-9E68-E31CB8064C3C}.Release|x64.Build.0 = Release|x64
 		{E8801B08-20C1-3AA4-9E68-E31CB8064C3C}.Release|x86.ActiveCfg = Release|x64
+		{AF0B96B6-53F4-4722-9CD4-C7D79384A0A3}.Debug|x64.ActiveCfg = Debug|x64
+		{AF0B96B6-53F4-4722-9CD4-C7D79384A0A3}.Debug|x64.Build.0 = Debug|x64
+		{AF0B96B6-53F4-4722-9CD4-C7D79384A0A3}.Debug|x86.ActiveCfg = Debug|x64
+		{AF0B96B6-53F4-4722-9CD4-C7D79384A0A3}.Release|x64.ActiveCfg = Release|x64
+		{AF0B96B6-53F4-4722-9CD4-C7D79384A0A3}.Release|x64.Build.0 = Release|x64
+		{AF0B96B6-53F4-4722-9CD4-C7D79384A0A3}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

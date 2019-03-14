@@ -18,6 +18,7 @@ private:
     uint8_t bit_reverse(uint8_t b_in);
     uint16_t crc16_update(uint16_t crc, uint8_t a, uint8_t bits);
     MaiaXmlRpcClient *rpc;
+    void rpc_set(const QString & key, int value);
 
 private slots:
     void readPendingDatagrams();
