@@ -84,7 +84,7 @@ void xn297decoder::run_gr_flowgraph()
         return;
     }
     if(!QFile::exists(GR_FLOWGRAPH)) {
-        ui.plainTextEdit->appendPlainText("gnuradio flow graph" + (QString)GR_FLOWGRAPH + " not found");
+        ui.plainTextEdit->appendPlainText("gnuradio flow graph " + (QString)GR_FLOWGRAPH + " not found");
         return;
     }    
     ui.plainTextEdit->appendPlainText("launching gnuradio flow graph");
@@ -241,7 +241,7 @@ void xn297decoder::rpc_hearthbeat()
 void xn297decoder::spinBox_channelChanged(int value)
 {
     rpc_set("channel", value);
-    uint freq = 2400000000 + value*1000000 + ui.spinBox_fineTune->value()*1000; 
+    uint freq = 2.4e9 + value*1e6 + ui.spinBox_fineTune->value()*1000; 
     ui.label_frequency->setText(QString::number((float)freq/1000000, 'f', 2) + " MHz");
     settings->setValue("channel", QString::number(value));
 }
@@ -249,8 +249,8 @@ void xn297decoder::spinBox_channelChanged(int value)
 void xn297decoder::spinBox_fineTuneChanged(int value)
 {
     rpc_set("freq_fine", value*1000);
-    uint freq = 2400000000 + ui.spinBox_channel->value()*1000000 + value*1000; 
-    ui.label_frequency->setText(QString::number((float)freq/1000000, 'f', 2) + " MHz");
+    uint freq = 2.4e9 + ui.spinBox_channel->value()*1e6 + value*1000; 
+    ui.label_frequency->setText(QString::number((float)freq/1e6, 'f', 2) + " MHz");
     settings->setValue("finetune", QString::number(value));
 }
 
@@ -289,7 +289,7 @@ void xn297decoder::radioButton_bitrate1MChanged()
 
 void xn297decoder::pushButton_locateGnuradioClicked()
 {
-    QString file = QFileDialog::getOpenFileName(this, "Locate gnuradio launcher", "C:\\Program Files\\" , "run_gr.bat", nullptr);
+    QString file = QFileDialog::getOpenFileName(this, "Locate gnuradio launcher", settings->value("gnuradio_launcher", "C:\\Program files").toString() , "run_gr.bat", nullptr);
     if(QFile::exists(file)) {
         settings->setValue("gnuradio_launcher", file);
         ui.pushButton_startStopFlowgraph->setEnabled(true);
@@ -322,8 +322,6 @@ void xn297decoder::gnuradio_processStateChanged(QProcess::ProcessState newState)
 void xn297decoder::gnuradio_processStdOutput()
 {
     QString output = (QString)(gnuradio_process->readAllStandardOutput());
-    while(output.endsWith("\r") || output.endsWith("\n"))
-        output.chop(1);
     if(output.indexOf("Press Enter") < 0)
         ui.plainTextEdit->appendHtml(output);
 }
@@ -331,8 +329,6 @@ void xn297decoder::gnuradio_processStdOutput()
 void xn297decoder::gnuradio_processStdError()
 {
     QString output = (QString)(gnuradio_process->readAllStandardError());
-    while(output.endsWith("\r") || output.endsWith("\n"))
-        output.chop(1);
     // strip XMLRPC server debug log
     if(output.indexOf("POST") < 0)
         ui.plainTextEdit->appendHtml(output);

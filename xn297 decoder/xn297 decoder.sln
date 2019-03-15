@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xn297 decoder", "xn297 decoder.vcxproj", "{AF0B96B6-53F4-4722-9CD4-C7D79384A0A3}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xn297decoder", "xn297 decoder.vcxproj", "{AF0B96B6-53F4-4722-9CD4-C7D79384A0A3}"
 	ProjectSection(ProjectDependencies) = postProject
 		{E8801B08-20C1-3AA4-9E68-E31CB8064C3C} = {E8801B08-20C1-3AA4-9E68-E31CB8064C3C}
 	EndProjectSection
@@ -13,19 +13,32 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{AF0B96B6-53F4-4722-9CD4-C7D79384A0A3}.Debug|x64.ActiveCfg = Debug|x64
 		{AF0B96B6-53F4-4722-9CD4-C7D79384A0A3}.Debug|x64.Build.0 = Debug|x64
+		{AF0B96B6-53F4-4722-9CD4-C7D79384A0A3}.Debug|x86.ActiveCfg = Debug|Win32
+		{AF0B96B6-53F4-4722-9CD4-C7D79384A0A3}.Debug|x86.Build.0 = Debug|Win32
 		{AF0B96B6-53F4-4722-9CD4-C7D79384A0A3}.Release|x64.ActiveCfg = Release|x64
 		{AF0B96B6-53F4-4722-9CD4-C7D79384A0A3}.Release|x64.Build.0 = Release|x64
+		{AF0B96B6-53F4-4722-9CD4-C7D79384A0A3}.Release|x86.ActiveCfg = Release|Win32
+		{AF0B96B6-53F4-4722-9CD4-C7D79384A0A3}.Release|x86.Build.0 = Release|Win32
 		{E8801B08-20C1-3AA4-9E68-E31CB8064C3C}.Debug|x64.ActiveCfg = Debug|x64
 		{E8801B08-20C1-3AA4-9E68-E31CB8064C3C}.Debug|x64.Build.0 = Debug|x64
+		{E8801B08-20C1-3AA4-9E68-E31CB8064C3C}.Debug|x86.ActiveCfg = Debug|Win32
+		{E8801B08-20C1-3AA4-9E68-E31CB8064C3C}.Debug|x86.Build.0 = Debug|Win32
 		{E8801B08-20C1-3AA4-9E68-E31CB8064C3C}.Release|x64.ActiveCfg = Release|x64
 		{E8801B08-20C1-3AA4-9E68-E31CB8064C3C}.Release|x64.Build.0 = Release|x64
+		{E8801B08-20C1-3AA4-9E68-E31CB8064C3C}.Release|x86.ActiveCfg = Release|Win32
+		{E8801B08-20C1-3AA4-9E68-E31CB8064C3C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		Qt5Version = msvc2015_64_5.11
 	EndGlobalSection
 EndGlobal
