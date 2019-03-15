@@ -1,3 +1,6 @@
 [submodule "libmaia"]
 	path = libmaia
 	url = https://github.com/wiedi/libmaia.git
+[submodule "kxmlrpcclient"]
+	path = kxmlrpcclient
+	url = https://anongit.kde.org/kxmlrpcclient.git
