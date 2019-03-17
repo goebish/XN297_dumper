@@ -5,7 +5,7 @@
 # Title: XN297 Demodulator
 # Author: goebish
 # Description: gnuradio flow graph for xn297decoder
-# Generated: Thu Mar 14 16:57:41 2019
+# Generated: Fri Mar 15 20:40:01 2019
 ##################################################
 
 from gnuradio import blocks
@@ -49,7 +49,7 @@ class xn297_gfsk_demodulator(gr.top_block):
         self.xmlrpc_server_0_thread = threading.Thread(target=self.xmlrpc_server_0.serve_forever)
         self.xmlrpc_server_0_thread.daemon = True
         self.xmlrpc_server_0_thread.start()
-        self.osmosdr_source_0 = osmosdr.source( args="numchan=" + str(1) + " " + 'hackrf=0' )
+        self.osmosdr_source_0 = osmosdr.source( args="numchan=" + str(1) + " " + '' )
         self.osmosdr_source_0.set_sample_rate(samp_rate)
         self.osmosdr_source_0.set_center_freq(freq+freq_offset+freq_fine, 0)
         self.osmosdr_source_0.set_freq_corr(0, 0)

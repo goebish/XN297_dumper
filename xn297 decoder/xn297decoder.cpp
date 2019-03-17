@@ -242,7 +242,7 @@ void xn297decoder::spinBox_channelChanged(int value)
 {
     rpc_set("channel", value);
     uint freq = 2.4e9 + value*1e6 + ui.spinBox_fineTune->value()*1000; 
-    ui.label_frequency->setText(QString::number((float)freq/1000000, 'f', 2) + " MHz");
+    ui.label_frequency->setText(QString::number((float)freq/1e6, 'f', 2) + " MHz");
     settings->setValue("channel", QString::number(value));
 }
 
