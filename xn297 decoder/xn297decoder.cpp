@@ -1,5 +1,4 @@
 ﻿#include "xn297decoder.h"
-//#include <QThread>
 #include <QFile>
 #include <QFileDialog>
 #include <QPixmap>
@@ -10,7 +9,7 @@ xn297decoder::xn297decoder(QWidget *parent)
 { 
     ui.setupUi(this);
     setWindowIcon(QIcon(QPixmap(":/xn297decoder/Resources/icon.png")));
-    setFixedSize(this->geometry().width(),this->geometry().height());
+    setFixedSize(this->size());
     setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
     statusBar()->setSizeGripEnabled(false);
     label_statusPps = new QLabel(this);
@@ -64,9 +63,9 @@ void xn297decoder::load_settings()
     rpc_set("channel", settings->value("channel","0").toInt(&ok));
     ui.spinBox_fineTune->setValue(settings->value("finetune","100").toInt(&ok));
     rpc_set("freq_fine", settings->value("finetune","100").toInt(&ok)*1000);
-    addressLength = settings->value("address_length","0").toInt(&ok);
+    addressLength = settings->value("address_length","5").toInt(&ok);
     ui.spinBox_addressLength->setValue(addressLength);
-    payloadLength = settings->value("payload_length","0").toInt(&ok);
+    payloadLength = settings->value("payload_length","15").toInt(&ok);
     ui.spinBox_payloadLength->setValue(payloadLength);
     if(settings->value("bitrate","1M") == "1M")
         ui.radioButton_bitrate1M->setChecked(true);
@@ -80,15 +79,15 @@ void xn297decoder::load_settings()
 void xn297decoder::run_gr_flowgraph()
 {
     if(!QFile::exists(settings->value("gnuradio_launcher","").toString())) {
-        ui.plainTextEdit->appendPlainText("gnuradio launcher not found");
+        ui.plainTextEdit->appendHtml("gnuradio launcher not found");
         return;
     }
     if(!QFile::exists(GR_FLOWGRAPH)) {
-        ui.plainTextEdit->appendPlainText("gnuradio flow graph " + (QString)GR_FLOWGRAPH + " not found");
+        ui.plainTextEdit->appendHtml("gnuradio flow graph " + (QString)GR_FLOWGRAPH + " not found");
         return;
     }    
-    ui.plainTextEdit->appendPlainText("launching gnuradio flow graph");
-    ui.plainTextEdit->appendPlainText("> " + settings->value("gnuradio_launcher","").toString() + " -u " + (QString)GR_FLOWGRAPH);
+    ui.plainTextEdit->appendHtml("launching gnuradio flow graph");
+    ui.plainTextEdit->appendHtml("> " + settings->value("gnuradio_launcher","").toString() + " -u " + (QString)GR_FLOWGRAPH);
     gnuradio_process->start(settings->value("gnuradio_launcher","").toString(), QStringList() << "-u" << GR_FLOWGRAPH);
 }
 
@@ -146,7 +145,7 @@ void xn297decoder::readPendingDatagrams()
         QNetworkDatagram datagram = socket->receiveDatagram();
         for(uint i=0; i<datagram.data().size(); i++) {
             uint8_t bit = (uint8_t)datagram.data().at(i);
-                if((bit & 0x02)) { // found correlate access code bit (1st bit of address)
+            if((bit & 0x02)) { // found correlate access code bit (1st bit of address)
                 byte = 0;
 			    bit_count = 0;
 			    byte_count = 0;
@@ -156,7 +155,7 @@ void xn297decoder::readPendingDatagrams()
                 log.clear();
 			    in_packet = true;
 		    }
-        
+            // TODO: reverse address
 		    if(in_packet) {
 			    if(bit & 0x01) {
 				    byte |= 1 << (7-bit_count);
@@ -218,10 +217,6 @@ void xn297decoder::rpc_hearthbeat_response(QVariant &response)
     if(!is_rpc_connected) {
         label_statusHearthbeat->setText("RPC hearthbeat Ok");
         is_rpc_connected = true;
-        // problem: we got the response before the flow graph is totally constructed
-        // wait a while before sending settings ...
-        // seems that's only required when the flow graph is started from gnuradio companion
-        //QThread::msleep(1000);
         load_settings();
     }
 }
@@ -298,7 +293,7 @@ void xn297decoder::pushButton_locateGnuradioClicked()
 
 void xn297decoder::pushButton_startStopFlowgraphClicked()
 {
-    if(gnuradio_process->state() == QProcess::ProcessState::Running) {
+    if(gnuradio_process->state() == QProcess::Running) {
         gnuradio_process->kill();
     }
     else {
@@ -308,12 +303,12 @@ void xn297decoder::pushButton_startStopFlowgraphClicked()
 
 void xn297decoder::gnuradio_processStateChanged(QProcess::ProcessState newState) {
     switch(newState) {
-        case QProcess::ProcessState::Running:
-            ui.plainTextEdit->appendPlainText("flow graph starting");
+        case QProcess::Running:
+            ui.plainTextEdit->appendHtml("flow graph starting");
             ui.pushButton_startStopFlowgraph->setText("stop gnuradio flow graph");
             break;
-        case QProcess::ProcessState::NotRunning:
-            ui.plainTextEdit->appendPlainText("gnuradio flow graph stopped");
+        case QProcess::NotRunning:
+            ui.plainTextEdit->appendHtml("gnuradio flow graph stopped");
             ui.pushButton_startStopFlowgraph->setText("start gnuradio flow graph");
             break;
     }
