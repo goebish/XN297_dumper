@@ -10,7 +10,7 @@ static const uint8_t xn297_scramble[] = {
     0x0d, 0xae, 0x8c, 0x88, 0x12, 0x69, 0xee, 0x1f,
     0xc7, 0x62, 0x97, 0xd5, 0x0b, 0x79, 0xca, 0xcc,
     0x1b, 0x5d, 0x19, 0x10, 0x24, 0xd3, 0xdc, 0x3f,
-    0x8e, 0xc5, 0x2f };
+    0x8e, 0xc5, 0x2f, 0xaa, 0x16, 0xf3, 0x95 };
 
 // scrambled, standard mode crc xorout table
 static const uint16_t xn297_crc_xorout_scrambled[] = {
@@ -18,7 +18,16 @@ static const uint16_t xn297_crc_xorout_scrambled[] = {
     0x451E, 0x18E6, 0x6B24, 0xE7AB, 0x3828, 0x814B,
     0xD461, 0xF494, 0x2503, 0x691D, 0xFE8B, 0x9BA7,
     0x8B17, 0x2920, 0x8B5F, 0x61B1, 0xD391, 0x7401,
-    0x2138, 0x129F, 0xB3A0, 0x2988 }; // TODO: complete
+    0x2138, 0x129F, 0xB3A0, 0x2988, 0x23CA, 0xC0CB,
+    0x0C6C, 0xb329, 0xA0A1, 0x0A16, 0xA9D0 };
+
+// unscrambled, standard mode crc xorout table
+static const uint16_t xn297_crc_xorout[] = {
+    0x0000, 0x3d5f, 0xa6f1, 0x3a23, 0xaa16, 0x1caf,
+    0x62b2, 0xe0eb, 0x0821, 0xbe07, 0x5f1a, 0xaf15,
+    0x4f0a, 0xad24, 0x5e48, 0xed34, 0x068c, 0xf2c9,
+    0x1852, 0xdf36, 0x129d, 0xb17c, 0xd5f5, 0x70d7,
+    0xb798, 0x5133, 0x67db, 0xd94e }; // TODO: complete
 
 // scrambled enhanced mode crc xorout table
 static const uint16_t xn297_crc_xorout_scrambled_enhanced[] = {
@@ -169,6 +178,7 @@ void xn297decoder::decodeStd()
     static QString log;
     QString temp;
     bool valid;
+    bool scrambled = ui.checkBox_scrambled->isChecked();
 
     while (socket->hasPendingDatagrams()) {
         QNetworkDatagram datagram = socket->receiveDatagram();
@@ -193,11 +203,11 @@ void xn297decoder::decodeStd()
                 if (bit_count > 7) {
                     if (byte_count < addressLength) {
                         crc = crc16_update(crc, byte, 8);
-                        byte = byte ^ xn297_scramble[byte_count];
+                        byte = byte ^ (scrambled ? xn297_scramble[byte_count] : 0);
                     }
                     else if (byte_count < addressLength + payloadLength) {
                         crc = crc16_update(crc, byte, 8);
-                        byte = bit_reverse(byte ^ xn297_scramble[byte_count]);
+                        byte = bit_reverse(byte ^ (scrambled ? xn297_scramble[byte_count] : 0));
                     }
                     if (byte_count == addressLength || byte_count == addressLength + payloadLength)
                         log += "<b>|</b> ";
@@ -210,15 +220,19 @@ void xn297decoder::decodeStd()
                     byte_count++;
                     if (byte_count == addressLength + payloadLength + crc_size) {
                         in_packet = false;
-                        crc ^= xn297_crc_xorout_scrambled[addressLength - 3 + payloadLength];
+                        if(scrambled)
+                            crc ^= xn297_crc_xorout_scrambled[addressLength - 3 + payloadLength];
+                        //else
+                        //    crc ^= xn297_crc_xorout[addressLength - 3 + payloadLength];*/
                         if (packet_crc == crc) {
-                            log += temp.sprintf("<font color='green'>%02X %02X", packet_crc >> 8, packet_crc & 0xff);
+                            log += temp.sprintf("<font color='green'>%02X %02X ", packet_crc >> 8, packet_crc & 0xff);
                             valid = true;
                         }
                         else {
-                            log += temp.sprintf("<font color='red'><b>%02X %02X", packet_crc >> 8, packet_crc & 0xff);
+                            log += temp.sprintf("<font color='red'><b>%02X %02X ", packet_crc >> 8, packet_crc & 0xff);
                             valid = false;
                         }
+                        log += temp.sprintf("%04x", crc ^ packet_crc); // crc xorout
                         if(!ui.checkBox_showValid->isChecked() || valid)
                             ui.plainTextEdit->appendHtml(log);
                         pps_counter++;
@@ -346,9 +360,7 @@ void xn297decoder::decodeEnhanced()
                         }
                         for (i = 0; i<crc_index; i++)
                             log += temp.sprintf("%02x ", crc_rx[i]);
-                        
                         //log += temp.sprintf("%04x", crc ^ ((crc_rx[0] << 8) | crc_rx[1])); // crc xorout
-                    
                         if (!ui.checkBox_showValid->isChecked() || valid)
                             ui.plainTextEdit->appendHtml(log);
                         pps_counter++;
