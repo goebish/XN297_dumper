@@ -57,6 +57,7 @@ private slots:
     void checkBox_enhancedClicked();
     void checkBox_autoLengthClicked();
     void checkBox_showValidClicked();
+    void checkBox_scrambledClicked();
     void show_pps(); // pps timer timout
     void rpc_hearthbeat();
     void gnuradio_processStateChanged(QProcess::ProcessState newState);

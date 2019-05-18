@@ -29,6 +29,15 @@ static const uint16_t xn297_crc_xorout_scrambled_enhanced[] = {
     0x7a1f, 0xdea2, 0x9642, 0xbf4b, 0x032f, 0x01d2,
     0xdc86, 0x92a5, 0x183a, 0xb760, 0xa953 };
 
+// unscrambled enhanced mode crc xorout table
+static const uint16_t xn297_crc_xorout_enhanced[] = {
+    0x0000, 0x8be6, 0xd8ec, 0xb87a, 0x42dc, 0xaa89,
+    0x83af, 0x10e4, 0xe83e, 0x5c29, 0xac76, 0x1c69,
+    0xa4b2, 0x5961, 0xb4d3, 0x2a50, 0xcb27, 0x5128,
+    0x7cdb, 0x7a14, 0xd5d2, 0x57d7, 0xe31d, 0xce42,
+    0x648d, 0xbf2d, 0x653b, 0x190c, 0x9117, 0x9a97,
+    0xabfc, 0xe68e, 0x0de7, 0x28a2, 0x1965 };
+
 xn297decoder::xn297decoder(QWidget *parent)
     : QMainWindow(parent)
 { 
@@ -59,6 +68,7 @@ xn297decoder::xn297decoder(QWidget *parent)
     connect(ui.checkBox_enhanced, SIGNAL(clicked()), this, SLOT(checkBox_enhancedClicked()));
     connect(ui.checkBox_autoLength, SIGNAL(clicked()), this, SLOT(checkBox_autoLengthClicked()));
     connect(ui.checkBox_showValid, SIGNAL(clicked()), this, SLOT(checkBox_showValidClicked()));
+    connect(ui.checkBox_scrambled, SIGNAL(clicked()), this, SLOT(checkBox_scrambledClicked()));
 
     settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "Goebish Apps", "xn297 decoder", this);
     load_settings();
@@ -106,6 +116,7 @@ void xn297decoder::load_settings()
     ui.checkBox_autoLength->setChecked(settings->value("autolen", "0") == "1");
     ui.checkBox_autoLength->setEnabled(ui.checkBox_enhanced->isChecked());
     ui.checkBox_showValid->setChecked(settings->value("showvalid", "0") == "1");
+    ui.checkBox_scrambled->setChecked(settings->value("scrambled", "0") == "1");
 }
 
 void xn297decoder::run_gr_flowgraph()
@@ -238,9 +249,12 @@ void xn297decoder::decodeEnhanced()
     static uint8_t address[5];
     static uint8_t payload[32];
     static uint8_t crc_rx[2];
+    uint16_t crc_xorout;
     static QString log;
     QString temp;
     bool valid;
+
+    bool scrambled = ui.checkBox_scrambled->isChecked();
 
     while (socket->hasPendingDatagrams()) {
         QNetworkDatagram datagram = socket->receiveDatagram();
@@ -267,11 +281,11 @@ void xn297decoder::decodeEnhanced()
                     // TODO: reverse address
                     if (byte_count < addressLength) {
                         crc = crc16_update(crc, byte, 8);
-                        address[address_index++] = byte ^ xn297_scramble[byte_count];
+                        address[address_index++] = byte ^ (scrambled ? xn297_scramble[byte_count] : 0);
                     }
                     else if (byte_count == addressLength) { // 8 msb of PCF
                         crc = crc16_update(crc, byte, 8);
-                        byte = byte ^ xn297_scramble[byte_count];
+                        byte = byte ^ (scrambled ? xn297_scramble[byte_count] : 0);
                         pcf_len2 = byte >> 1;
                         if(ui.checkBox_autoLength->isChecked()) {
                             pcf_len = byte >> 1;  // automatic payload size
@@ -286,7 +300,7 @@ void xn297decoder::decodeEnhanced()
                     else if (byte_count == addressLength + 1) { // 2 lsb of PCF + 6 bit of payload
                         tmp_payload = byte << 2; // 6 bit of payload (scrambled+reversed)
                         crc = crc16_update(crc, byte, 8);
-                        byte = byte ^ xn297_scramble[byte_count];
+                        byte = byte ^ (scrambled ? xn297_scramble[byte_count] : 0);
                         pcf_id |= byte >> 7; // pid lsb
                         pcf_noack = (byte & 0x7f) >> 6; // no_ack flag
                     }
@@ -298,7 +312,7 @@ void xn297decoder::decodeEnhanced()
                         crc = crc16_update(crc, tt, payload_index == pcf_len - 1 ? 2 : 8);
 
                         uint8_t xor = xn297_scramble[byte_count - 1] << 2 | xn297_scramble[byte_count] >> 6;
-                        payload[payload_index++] = bit_reverse(tmp_payload ^ xor);
+                        payload[payload_index++] = bit_reverse(tmp_payload ^ (scrambled ? xor : 0));
                         tmp_payload = byte << 2; // 6 next bit of payload
                     }
                     else { // crc
@@ -317,7 +331,10 @@ void xn297decoder::decodeEnhanced()
                             log += temp.sprintf("%02x ", payload[i]);
                         log += "<b>|</b> ";
                         
-                        uint16_t crc_xorout = xn297_crc_xorout_scrambled_enhanced[addressLength+pcf_len-3]; // 0x8435 = crc xorout for 12 byte payload
+                        if(scrambled)
+                            crc_xorout = xn297_crc_xorout_scrambled_enhanced[addressLength+pcf_len-3];
+                        else
+                            crc_xorout = xn297_crc_xorout_enhanced[addressLength + pcf_len - 3];
 
                         if ((crc ^ crc_xorout) == ((crc_rx[0] << 8) | crc_rx[1])) {
                             log += "<font color='green'>";
@@ -330,8 +347,7 @@ void xn297decoder::decodeEnhanced()
                         for (i = 0; i<crc_index; i++)
                             log += temp.sprintf("%02x ", crc_rx[i]);
                         
-                        //log += temp.sprintf("%04x ", crc);
-                        log += temp.sprintf("%04x", crc ^ ((crc_rx[0] << 8) | crc_rx[1]));
+                        //log += temp.sprintf("%04x", crc ^ ((crc_rx[0] << 8) | crc_rx[1])); // crc xorout
                     
                         if (!ui.checkBox_showValid->isChecked() || valid)
                             ui.plainTextEdit->appendHtml(log);
@@ -505,4 +521,9 @@ void xn297decoder::checkBox_autoLengthClicked()
 void xn297decoder::checkBox_showValidClicked()
 {
     settings->setValue("showvalid", ui.checkBox_showValid->isChecked() ? "1" : "0");
+}
+
+void xn297decoder::checkBox_scrambledClicked()
+{
+    settings->setValue("scrambled", ui.checkBox_scrambled->isChecked() ? "1" : "0");
 }
