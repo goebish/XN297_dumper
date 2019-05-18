@@ -27,7 +27,8 @@ static const uint16_t xn297_crc_xorout[] = {
     0x62b2, 0xe0eb, 0x0821, 0xbe07, 0x5f1a, 0xaf15,
     0x4f0a, 0xad24, 0x5e48, 0xed34, 0x068c, 0xf2c9,
     0x1852, 0xdf36, 0x129d, 0xb17c, 0xd5f5, 0x70d7,
-    0xb798, 0x5133, 0x67db, 0xd94e }; // TODO: complete
+    0xb798, 0x5133, 0x67db, 0xd94e, 0x0a5b, 0xe445,
+    0xe6a5, 0x26e7, 0xbdab, 0xc379, 0x8e20 };
 
 // scrambled enhanced mode crc xorout table
 static const uint16_t xn297_crc_xorout_scrambled_enhanced[] = {
@@ -222,8 +223,8 @@ void xn297decoder::decodeStd()
                         in_packet = false;
                         if(scrambled)
                             crc ^= xn297_crc_xorout_scrambled[addressLength - 3 + payloadLength];
-                        //else
-                        //    crc ^= xn297_crc_xorout[addressLength - 3 + payloadLength];*/
+                        else
+                            crc ^= xn297_crc_xorout[addressLength - 3 + payloadLength];
                         if (packet_crc == crc) {
                             log += temp.sprintf("<font color='green'>%02X %02X ", packet_crc >> 8, packet_crc & 0xff);
                             valid = true;
@@ -232,7 +233,6 @@ void xn297decoder::decodeStd()
                             log += temp.sprintf("<font color='red'><b>%02X %02X ", packet_crc >> 8, packet_crc & 0xff);
                             valid = false;
                         }
-                        log += temp.sprintf("%04x", crc ^ packet_crc); // crc xorout
                         if(!ui.checkBox_showValid->isChecked() || valid)
                             ui.plainTextEdit->appendHtml(log);
                         pps_counter++;
@@ -267,7 +267,6 @@ void xn297decoder::decodeEnhanced()
     static QString log;
     QString temp;
     bool valid;
-
     bool scrambled = ui.checkBox_scrambled->isChecked();
 
     while (socket->hasPendingDatagrams()) {
@@ -320,11 +319,9 @@ void xn297decoder::decodeEnhanced()
                     }
                     else if (payload_index < pcf_len) {
                         tmp_payload |= byte >> 6; // 2 remaining bit of payload
-
                         uint8_t tt = byte;
                         if (payload_index == pcf_len - 1) tt = tt & 0xc0; // pad last byte lsb with 000000
                         crc = crc16_update(crc, tt, payload_index == pcf_len - 1 ? 2 : 8);
-
                         uint8_t xor = xn297_scramble[byte_count - 1] << 2 | xn297_scramble[byte_count] >> 6;
                         payload[payload_index++] = bit_reverse(tmp_payload ^ (scrambled ? xor : 0));
                         tmp_payload = byte << 2; // 6 next bit of payload
@@ -360,7 +357,6 @@ void xn297decoder::decodeEnhanced()
                         }
                         for (i = 0; i<crc_index; i++)
                             log += temp.sprintf("%02x ", crc_rx[i]);
-                        //log += temp.sprintf("%04x", crc ^ ((crc_rx[0] << 8) | crc_rx[1])); // crc xorout
                         if (!ui.checkBox_showValid->isChecked() || valid)
                             ui.plainTextEdit->appendHtml(log);
                         pps_counter++;
