@@ -48,6 +48,7 @@ xn297decoder::xn297decoder(QWidget *parent)
     connect(ui.pushButton_startStopFlowgraph, SIGNAL(clicked()), this, SLOT(pushButton_startStopFlowgraphClicked()));
     connect(ui.checkBox_enhanced, SIGNAL(clicked()), this, SLOT(checkBox_enhancedClicked()));
     connect(ui.checkBox_autoLength, SIGNAL(clicked()), this, SLOT(checkBox_autoLengthClicked()));
+    connect(ui.checkBox_showValid, SIGNAL(clicked()), this, SLOT(checkbox_showValidClicked()));
 
     settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "Goebish Apps", "xn297 decoder", this);
     load_settings();
@@ -94,6 +95,7 @@ void xn297decoder::load_settings()
     ui.checkBox_enhanced->setChecked(settings->value("enhanced","0") == "1");
     ui.checkBox_autoLength->setChecked(settings->value("autolen", "0") == "1");
     ui.checkBox_autoLength->setEnabled(ui.checkBox_enhanced->isChecked());
+    ui.checkBox_showValid->setChecked(settings->value("showvalid", "0") == "1");
 }
 
 void xn297decoder::run_gr_flowgraph()
@@ -145,6 +147,7 @@ void xn297decoder::decodeStd()
     static uint16_t crc, packet_crc;
     static QString log;
     QString temp;
+    bool valid;
 
     while (socket->hasPendingDatagrams()) {
         QNetworkDatagram datagram = socket->receiveDatagram();
@@ -187,11 +190,16 @@ void xn297decoder::decodeStd()
                     if (byte_count == addressLength + payloadLength + crc_size) {
                         in_packet = false;
                         crc ^= xn297_crc_xorout_scrambled[addressLength - 3 + payloadLength];
-                        if (packet_crc == crc)
+                        if (packet_crc == crc) {
                             log += temp.sprintf("<font color='green'>%02X %02X", packet_crc >> 8, packet_crc & 0xff);
-                        else
+                            valid = true;
+                        }
+                        else {
                             log += temp.sprintf("<font color='red'><b>%02X %02X", packet_crc >> 8, packet_crc & 0xff);
-                        ui.plainTextEdit->appendHtml(log);
+                            valid = false;
+                        }
+                        if(!ui.checkBox_showValid->isChecked() || valid)
+                            ui.plainTextEdit->appendHtml(log);
                         pps_counter++;
                     }
                 }
@@ -222,12 +230,13 @@ void xn297decoder::decodeEnhanced()
     static uint8_t crc_rx[2];
     static QString log;
     QString temp;
+    bool valid;
 
     while (socket->hasPendingDatagrams()) {
         QNetworkDatagram datagram = socket->receiveDatagram();
         for (uint j = 0; j<datagram.data().size(); j++) {
             uint8_t bit = (uint8_t)datagram.data().at(j);
-            if ((bit & 0x02) && !in_packet) { // found correlate access code bit (1st bit of address)
+            if (bit & 0x02) { // found correlate access code bit (1st bit of address)
                 byte = 0;
                 bit_count = 0;
                 byte_count = 0;
@@ -300,18 +309,22 @@ void xn297decoder::decodeEnhanced()
                         
                         uint16_t crc_xorout = 0x8435; // 0x8435 = crc xorout for 12 byte payload
 
-                        if ((crc ^ crc_xorout) == ((crc_rx[0] << 8) | crc_rx[1]))
+                        if ((crc ^ crc_xorout) == ((crc_rx[0] << 8) | crc_rx[1])) {
                             log += "<font color='green'>";
-                        else
+                            valid = true;
+                        }
+                        else {
                             log += "<font color='red'><b>";
-                            
+                            valid = false;
+                        }
                         for (i = 0; i<crc_index; i++)
-                            log += temp.sprintf("%02x", crc_rx[i]);
+                            log += temp.sprintf("%02x ", crc_rx[i]);
                         
                         //log += temp.sprintf("%04x ", crc);
                         //log += temp.sprintf("%04x", crc ^ ((crc_rx[0] << 8) | crc_rx[1]));
                     
-                        ui.plainTextEdit->appendHtml(log);
+                        if (!ui.checkBox_showValid->isChecked() || valid)
+                            ui.plainTextEdit->appendHtml(log);
                         pps_counter++;
                         in_packet = false;
                     }
@@ -477,4 +490,9 @@ void xn297decoder::checkBox_enhancedClicked()
 void xn297decoder::checkBox_autoLengthClicked()
 {
     settings->setValue("autolen", ui.checkBox_autoLength->isChecked() ? "1" : "0");
+}
+
+void xn297decoder::checkBox_showValidClicked()
+{
+    settings->setValue("showvalid", ui.checkBox_showValid->isChecked() ? "1" : "0");
 }

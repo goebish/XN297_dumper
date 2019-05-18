@@ -56,6 +56,7 @@ private slots:
     void pushButton_startStopFlowgraphClicked();
     void checkBox_enhancedClicked();
     void checkBox_autoLengthClicked();
+    void checkBox_showValidClicked();
     void show_pps(); // pps timer timout
     void rpc_hearthbeat();
     void gnuradio_processStateChanged(QProcess::ProcessState newState);
