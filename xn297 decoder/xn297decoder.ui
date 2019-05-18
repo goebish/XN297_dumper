@@ -25,7 +25,7 @@
      <rect>
       <x>330</x>
       <y>10</y>
-      <width>151</width>
+      <width>161</width>
       <height>91</height>
      </rect>
     </property>
@@ -36,7 +36,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>50</y>
+       <y>30</y>
        <width>42</width>
        <height>22</height>
       </rect>
@@ -55,7 +55,7 @@
      <property name="geometry">
       <rect>
        <x>80</x>
-       <y>50</y>
+       <y>30</y>
        <width>51</width>
        <height>22</height>
       </rect>
@@ -76,12 +76,14 @@
        <x>10</x>
        <y>10</y>
        <width>47</width>
-       <height>31</height>
+       <height>21</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Address length</string>
+     </property>
      <property name="text">
-      <string>Address
-length</string>
+      <string>Address</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_4">
@@ -90,12 +92,46 @@ length</string>
        <x>80</x>
        <y>10</y>
        <width>47</width>
-       <height>31</height>
+       <height>21</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Payload length</string>
+     </property>
      <property name="text">
-      <string>Payload
-length</string>
+      <string>Payload</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkBox_enhanced">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>60</y>
+       <width>71</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Enhanced packet mode</string>
+     </property>
+     <property name="text">
+      <string>Enhanced</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkBox_autoLength">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>60</y>
+       <width>81</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Packet length set in PCF</string>
+     </property>
+     <property name="text">
+      <string>Auto length</string>
      </property>
     </widget>
    </widget>

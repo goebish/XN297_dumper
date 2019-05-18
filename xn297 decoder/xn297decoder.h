@@ -38,6 +38,8 @@ private:
     QLabel *label_statusPps;
     QLabel *label_statusHearthbeat;
     QLabel *label_statusSeparator;
+    void decodeStd();
+    void decodeEnhanced();
 
 private slots:
     void readPendingDatagrams();
@@ -52,6 +54,8 @@ private slots:
     void radioButton_bitrate1MChanged();
     void pushButton_locateGnuradioClicked();
     void pushButton_startStopFlowgraphClicked();
+    void checkBox_enhancedClicked();
+    void checkBox_autoLengthClicked();
     void show_pps(); // pps timer timout
     void rpc_hearthbeat();
     void gnuradio_processStateChanged(QProcess::ProcessState newState);
