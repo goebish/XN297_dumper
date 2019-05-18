@@ -1,5 +1,5 @@
-# XN297 Decoder
-SDR Panchip XN297(L) decoder
+# XN297 Dumper
+SDR Panchip XN297(L) dumper
 
 ![Screenshot](https://i.imgur.com/MEDWbKr.png)
 
