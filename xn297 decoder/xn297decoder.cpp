@@ -12,12 +12,22 @@ static const uint8_t xn297_scramble[] = {
     0x1b, 0x5d, 0x19, 0x10, 0x24, 0xd3, 0xdc, 0x3f,
     0x8e, 0xc5, 0x2f };
 
+// scrambled, standard mode crc xorout table
 static const uint16_t xn297_crc_xorout_scrambled[] = {
     0x0000, 0x3448, 0x9BA7, 0x8BBB, 0x85E1, 0x3E8C,
     0x451E, 0x18E6, 0x6B24, 0xE7AB, 0x3828, 0x814B,
     0xD461, 0xF494, 0x2503, 0x691D, 0xFE8B, 0x9BA7,
     0x8B17, 0x2920, 0x8B5F, 0x61B1, 0xD391, 0x7401,
-    0x2138, 0x129F, 0xB3A0, 0x2988 };
+    0x2138, 0x129F, 0xB3A0, 0x2988 }; // TODO: complete
+
+// scrambled enhanced mode crc xorout table
+static const uint16_t xn297_crc_xorout_scrambled_enhanced[] = {
+    0x0000, 0x7ebf, 0x3ece, 0x07a4, 0xca52, 0x343b,
+    0x53f8, 0x8cd0, 0x9eac, 0xd0c0, 0x150d, 0x5186,
+    0xd251, 0xa46f, 0x8435, 0xfa2e, 0x7ebd, 0x3c7d,
+    0x94e0, 0x3d5f, 0xa685, 0x4e47, 0xf045, 0xb483,
+    0x7a1f, 0xdea2, 0x9642, 0xbf4b, 0x032f, 0x01d2,
+    0xdc86, 0x92a5, 0x183a, 0xb760, 0xa953 };
 
 xn297decoder::xn297decoder(QWidget *parent)
     : QMainWindow(parent)
@@ -48,7 +58,7 @@ xn297decoder::xn297decoder(QWidget *parent)
     connect(ui.pushButton_startStopFlowgraph, SIGNAL(clicked()), this, SLOT(pushButton_startStopFlowgraphClicked()));
     connect(ui.checkBox_enhanced, SIGNAL(clicked()), this, SLOT(checkBox_enhancedClicked()));
     connect(ui.checkBox_autoLength, SIGNAL(clicked()), this, SLOT(checkBox_autoLengthClicked()));
-    connect(ui.checkBox_showValid, SIGNAL(clicked()), this, SLOT(checkbox_showValidClicked()));
+    connect(ui.checkBox_showValid, SIGNAL(clicked()), this, SLOT(checkBox_showValidClicked()));
 
     settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "Goebish Apps", "xn297 decoder", this);
     load_settings();
@@ -254,7 +264,7 @@ void xn297decoder::decodeEnhanced()
                 }
                 bit_count++;
                 if (bit_count > 7) {
-                    //printf("%02x ", byte);
+                    // TODO: reverse address
                     if (byte_count < addressLength) {
                         crc = crc16_update(crc, byte, 8);
                         address[address_index++] = byte ^ xn297_scramble[byte_count];
@@ -288,7 +298,7 @@ void xn297decoder::decodeEnhanced()
                         crc = crc16_update(crc, tt, payload_index == pcf_len - 1 ? 2 : 8);
 
                         uint8_t xor = xn297_scramble[byte_count - 1] << 2 | xn297_scramble[byte_count] >> 6;
-                        payload[payload_index++] = bit_reverse(tmp_payload) ^ bit_reverse(xor);
+                        payload[payload_index++] = bit_reverse(tmp_payload ^ xor);
                         tmp_payload = byte << 2; // 6 next bit of payload
                     }
                     else { // crc
@@ -307,7 +317,7 @@ void xn297decoder::decodeEnhanced()
                             log += temp.sprintf("%02x ", payload[i]);
                         log += "<b>|</b> ";
                         
-                        uint16_t crc_xorout = 0x8435; // 0x8435 = crc xorout for 12 byte payload
+                        uint16_t crc_xorout = xn297_crc_xorout_scrambled_enhanced[addressLength+pcf_len-3]; // 0x8435 = crc xorout for 12 byte payload
 
                         if ((crc ^ crc_xorout) == ((crc_rx[0] << 8) | crc_rx[1])) {
                             log += "<font color='green'>";
@@ -321,7 +331,7 @@ void xn297decoder::decodeEnhanced()
                             log += temp.sprintf("%02x ", crc_rx[i]);
                         
                         //log += temp.sprintf("%04x ", crc);
-                        //log += temp.sprintf("%04x", crc ^ ((crc_rx[0] << 8) | crc_rx[1]));
+                        log += temp.sprintf("%04x", crc ^ ((crc_rx[0] << 8) | crc_rx[1]));
                     
                         if (!ui.checkBox_showValid->isChecked() || valid)
                             ui.plainTextEdit->appendHtml(log);
