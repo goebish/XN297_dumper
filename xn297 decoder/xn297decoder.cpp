@@ -173,7 +173,7 @@ void xn297decoder::decodeStd()
     const uint16_t crc_initial = 0xb5d2;
     const uint8_t crc_size = 2;
 
-    static uint8_t byte, bit_count, byte_count, crc_index;
+    static uint8_t byte, bit_count, byte_count, crc_index, address[5];
     static bool in_packet = false;
     static uint16_t crc, packet_crc;
     static QString log;
@@ -205,16 +205,22 @@ void xn297decoder::decodeStd()
                     if (byte_count < addressLength) {
                         crc = crc16_update(crc, byte, 8);
                         byte = byte ^ (scrambled ? xn297_scramble[byte_count] : 0);
+                        address[addressLength-1-byte_count] = byte;
                     }
                     else if (byte_count < addressLength + payloadLength) {
                         crc = crc16_update(crc, byte, 8);
                         byte = bit_reverse(byte ^ (scrambled ? xn297_scramble[byte_count] : 0));
                     }
-                    if (byte_count == addressLength || byte_count == addressLength + payloadLength)
+                    if (byte_count == addressLength) {
+                        for (uint8_t j = 0; j < addressLength; j++) {
+                            log += temp.sprintf("%02x ", address[j]);
+                        }
+                    }
+                    if(byte_count == addressLength || byte_count == addressLength + payloadLength)
                         log += "<b>|</b> ";
-                    if (byte_count < addressLength + payloadLength)
+                    if (byte_count >= addressLength && byte_count < addressLength + payloadLength)
                         log += temp.sprintf("%02X ", byte);
-                    else // crc bytes
+                    else if (byte_count >= addressLength + payloadLength) // crc bytes
                         packet_crc |= (uint16_t)byte << (8 * crc_index--);
                     bit_count = 0;
                     byte = 0;
@@ -291,10 +297,9 @@ void xn297decoder::decodeEnhanced()
                 }
                 bit_count++;
                 if (bit_count > 7) {
-                    // TODO: reverse address
                     if (byte_count < addressLength) {
                         crc = crc16_update(crc, byte, 8);
-                        address[address_index++] = byte ^ (scrambled ? xn297_scramble[byte_count] : 0);
+                        address[addressLength-1-address_index++] = byte ^ (scrambled ? xn297_scramble[byte_count] : 0);
                     }
                     else if (byte_count == addressLength) { // 8 msb of PCF
                         crc = crc16_update(crc, byte, 8);
