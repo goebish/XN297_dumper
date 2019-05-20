@@ -195,7 +195,6 @@ void xn297decoder::decodeStd()
                 log.clear();
                 in_packet = true;
             }
-            // TODO: reverse address
             if (in_packet) {
                 if (bit & 0x01) {
                     byte |= 1 << (7 - bit_count);
