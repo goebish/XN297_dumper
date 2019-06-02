@@ -5,6 +5,6 @@ SDR Panchip XN297(L) dumper
 
 ### Requirements
 - gnuradio
-- 2.4 Ghz, 4 Mbps capable osmocom compatible SDR device
+- 2.4 Ghz, 4 Msps capable osmocom compatible SDR device
 
 Tested with gnuradio 3.7.13.4 / HackRF One
