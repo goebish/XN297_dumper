@@ -3,7 +3,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QUdpSocket>
 #include <QSettings>
-#include <Qtimer>
+#include <QTimer>
 #include <QProcess>
 #include <QLabel>
 #include "ui_xn297decoder.h"
