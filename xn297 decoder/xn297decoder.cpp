@@ -141,7 +141,11 @@ void xn297decoder::run_gr_flowgraph()
     }    
     ui.plainTextEdit->appendHtml("launching gnuradio flow graph");
     ui.plainTextEdit->appendHtml("> " + settings->value("gnuradio_launcher","").toString() + " -u " + (QString)GR_FLOWGRAPH);
+#ifdef LINUX
+    gnuradio_process->start((QString)"python"  , QStringList() << GR_FLOWGRAPH);
+#else
     gnuradio_process->start(settings->value("gnuradio_launcher","").toString(), QStringList() << "-u" << GR_FLOWGRAPH);
+#endif
 }
 
 uint8_t xn297decoder::bit_reverse(uint8_t b_in)
@@ -326,8 +330,8 @@ void xn297decoder::decodeEnhanced()
                         uint8_t tt = byte;
                         if (payload_index == pcf_len - 1) tt = tt & 0xc0; // pad last byte lsb with 000000
                         crc = crc16_update(crc, tt, payload_index == pcf_len - 1 ? 2 : 8);
-                        uint8_t xor = xn297_scramble[byte_count - 1] << 2 | xn297_scramble[byte_count] >> 6;
-                        payload[payload_index++] = bit_reverse(tmp_payload ^ (scrambled ? xor : 0));
+                        uint8_t _xor = xn297_scramble[byte_count - 1] << 2 | xn297_scramble[byte_count] >> 6;
+                        payload[payload_index++] = bit_reverse(tmp_payload ^ (scrambled ? _xor : 0));
                         tmp_payload = byte << 2; // 6 next bit of payload
                     }
                     else { // crc
